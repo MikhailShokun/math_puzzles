@@ -1,0 +1,33 @@
+
+.App {
+  padding-top: 30px;
+  min-width: 1000px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 1.5rem;
+  color: white;
+  background-color: #3a3c4b;
+  min-height: 100vh;
+}
+
+.buttonWrapper{
+  width: 350px;
+  display: flex;
+  flex-direction: column;
+}
+
+.buttons{
+  margin-bottom: 10px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  button:not(:first-child){
+    margin-left: 5px;
+  }
+}
+
+.inputField input{
+  color: #ffffff;
+}
