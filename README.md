@@ -1,5 +1,5 @@
 
-[Click here to open project](https://math-puzzles.vercel.app/)
+🚀 [Click here to open project](https://math-puzzles.vercel.app/) 🚀
 
 # Getting Started with Create React App and Redux
 
