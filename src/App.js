@@ -1,16 +1,19 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Button, TextField} from "@mui/material";
 import s from "./App.module.scss"
+import FireWorks from "./components/fireworks/FireWorks";
+import Win from "./components/win/Win";
 
 
 const App = () => {
     const [num1, setNum1] = useState(Number(0));
     const [num2, setNum2] = useState(Number(0));
-    const [maxNum, setMaxNum] = useState(Number(0));
+    const [maxNum, setMaxNum] = useState(Number(20));
     const [operator, setOperator] = useState("+");
     const [rightAnswer, setRightAnswer] = useState(Number(0));
     const [inputNum, setInputNum] = useState(Number(0));
-    const [answer, setAnswer] = useState(Number(0));
+    const [answer, setAnswer] = useState('');
+    const [scores, setScores] = useState(0);
 
     const randomNum = (a, b) => {
         let numLength = 2;
@@ -48,66 +51,84 @@ const App = () => {
         }
     };
 
+    useEffect(() => {
+        if (answer === rightAnswer) {
+            setScores(scores + 1);
+        }
+    }, [answer])
+
     return (
         <div className={s.App}>
             <div>
                 <h1>Math puzzles</h1>
-                <div className={s.buttonWrapper}>
-                    <div className={s.buttons}>
-                        <Button onClick={() => setOperator("+")} color="warning" variant="outlined">+</Button>
-                        <Button onClick={() => setOperator("-")} color="warning" variant="outlined">-</Button>
-                        <Button onClick={() => setOperator("*")} color="warning" variant="outlined">*</Button>
-                        <Button onClick={() => setOperator("/")} color="warning" variant="outlined">/</Button>
+                {(scores === 2 ) ? <>
+                    <Win />
+                        {/*<h2>YOU WIN !!!</h2>*/}
+                    {/*<FireWorks setScores={setScores} />*/}
+                    </> :
+
+                    <div className={s.mathWrapper}>
+                        <div>your scores: <span style={{color: "yellow"}}>{scores}</span></div>
+                        <div className={s.buttonWrapper}>
+                            <div className={s.buttons}>
+                                <Button onClick={() => setOperator("+")} color="warning" variant="outlined">+</Button>
+                                <Button onClick={() => setOperator("-")} color="warning" variant="outlined">-</Button>
+                                <Button onClick={() => setOperator("*")} color="warning" variant="outlined">*</Button>
+                                <Button onClick={() => setOperator("/")} color="warning" variant="outlined">/</Button>
+                            </div>
+                            <Button onClick={() => {
+                                setMaxNum(20)
+                                randomNum(0, 20)
+                            }} variant="outlined">to 20</Button>
+                            <Button onClick={() => {
+                                setMaxNum(100)
+                                randomNum(0, 100);
+                            }} variant="outlined">to 100</Button>
+                            <Button onClick={() => {
+                                setMaxNum(1000);
+                                randomNum(0, 1000);
+                            }} variant="outlined">to 1000</Button>
+                        </div>
+
+                        <hr/>
+
+                        <div className={s.buttons}>
+                            <span style={{marginRight: "10px"}}>{num1} {operator} {num2} =</span>
+                            <TextField
+                                className={s.inputField}
+                                value={inputNum}
+                                onChange={(e) => setInputNum(e.target.value)}
+                                type="number"
+                                color="info"
+                                sx={{width: "10ch", color: "white"}}
+                                id="outlined-size-small"
+                                size="small"
+                                label="input answer"
+                                variant="outlined"
+                                autoFocus
+                            />
+                        </div>
+                        <div className={s.buttons}>
+
+                            <Button onClick={() => {
+                                calcResult(num1, num2, operator);
+                                setAnswer(Number(inputNum));
+                                // console.log("answer: ", answer, "rightAnswer: ", rightAnswer);
+                            }} color="success" variant="outlined">Answer</Button>
+
+                            <Button onClick={() => {
+                                randomNum(0, maxNum);
+                                setAnswer(0)
+                            }} color="warning" variant="outlined">Reset</Button>
+
+                        </div>
+
+                        <div>Your answer: <span
+                            style={{color: (answer === rightAnswer) ? "green" : "red"}}>{answer}</span>
+                        </div>
+                        <div>Right answer: <span style={{color: "green"}}>{rightAnswer}</span></div>
                     </div>
-                    <Button onClick={() => {
-                        setMaxNum(20)
-                        randomNum(0, 20)
-                    }} variant="outlined">to 20</Button>
-                    <Button onClick={() => {
-                        setMaxNum(100)
-                        randomNum(0, 100);
-                    }} variant="outlined">to 100</Button>
-                    <Button onClick={() => {
-                        setMaxNum(1000);
-                        randomNum(0, 1000);
-                    }} variant="outlined">to 1000</Button>
-                </div>
-
-                <hr/>
-
-                <div className={s.buttons}>
-                    <span style={{marginRight: "10px"}}>{num1} {operator} {num2} =</span>
-                    <TextField
-                        className={s.inputField}
-                        value={inputNum}
-                        onChange={(e) => setInputNum(e.target.value)}
-                        type="number"
-                        color="info"
-                        sx={{width: "10ch", color: "white"}}
-                        id="outlined-size-small"
-                        size="small"
-                        label="input answer"
-                        variant="outlined"
-                        autoFocus
-                    />
-                </div>
-                <div className={s.buttons}>
-
-                    <Button onClick={() => {
-                        calcResult(num1, num2, operator);
-                        setAnswer(Number(inputNum));
-                    }} color="success" variant="outlined">Answer</Button>
-
-                    <Button onClick={() => {
-                        randomNum(0, maxNum);
-                        setAnswer(0)
-                    }} color="secondary" variant="outlined">Reset</Button>
-
-                </div>
-
-                <div>Your answer: <span style={{color: (answer === rightAnswer) ? "green" : "red"}}>{answer}</span></div>
-                <div>Right answer: <span style={{color: "green"}}>{rightAnswer}</span></div>
-
+                }
             </div>
         </div>
     );
